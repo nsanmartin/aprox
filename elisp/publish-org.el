@@ -5,9 +5,10 @@
 (setq basedir "~/proyectos/aprox/")
 (setq org-publish-project-alist
       '(("aprox"
-        :base-directory "~/proyectos/aprox/org/"
+        :base-directory "~/proyectos/aprox/org/_posts"
         :base-extension "org"
-        :publishing-directory "~/proyectos/aprox.github.io/"
+        ;;:publishing-directory "~/proyectos/aprox.github.io/"
+        :publishing-directory "~/proyectos/aprox/jekyll/_posts"
         :recursive t
         :publishing-function org-html-publish-to-html
         :headline-levels 4     ; Just the default for this project.

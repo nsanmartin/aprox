@@ -1,9 +1,9 @@
-#+OPTIONS: tex:dvipng 
 #+begin_html
 ---
 layout: post
 title: Representación de números enteros
 ---
+<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 #+end_html
 
 Hay quienes dicen (y suena verosimil) que el hecho de que usemos
@@ -14,7 +14,8 @@ los números del uno al diez solo usando los dedos. El problema se
 presenta cuando el número que queremos representar es mayor
 que 10. Como los números enteros son infinitos resulta muy poco
 práctico dedicar una /cifra/ (es decir un símbolo gráfico) para cada
-uno de ellos.
+uno de ellos. Sólo nos acordaríamos algunos números, y para el resto
+habría que ir a consultarlo, por ejemplo.
 
 Por eso es que usamos más de una cifra para representar un
 número. Así, para representar el 27 utilizamos los símbolos '2' y
@@ -35,30 +36,30 @@ donde $n$ es un número natural, $k$ es la cantidad de cifras (o de
 está en la posición $i$ y $b$ es la "base" de la representación: 10
 para decimal, 2 para binario, etc.
 
-Teniendo en cuenta esto, parece que tal vez hubiese sido más útil usar
-como base el número 6 en lugar del 10 como base de nuestro sistema de
-numeración, si la idea era representar los número con las manos. Con
-6 se puede representar fácilmente hasta el número 35, si usamos cada
-mano como un dígito distinto (en lugar de usar ambas como uno
-decimal. Aunque pensándolo mejor podemos usar cada mano para
-representar del 0 al 9 independientemente si levantamos los dedos
-desde el pulgar hasta el meñique para representar del 0 al 5, y los
-bajamos también del pulgar hasta el anular -dejando levantados los que
-así lo estén- para representar del 6 al 9).
+# Teniendo en cuenta esto, parece que tal vez hubiese sido más útil usar
+# como base el número 6 en lugar del 10 como base de nuestro sistema de
+# numeración, si la idea era representar los número con las manos. Con
+# 6 se puede representar fácilmente hasta el número 35, si usamos cada
+# mano como un dígito distinto (en lugar de usar ambas como uno
+# decimal. Aunque pensándolo mejor podemos usar cada mano para
+# representar del 0 al 9 independientemente si levantamos los dedos
+# desde el pulgar hasta el meñique para representar del 0 al 5, y los
+# bajamos también del pulgar hasta el anular -dejando levantados los que
+# así lo estén- para representar del 6 al 9).
 
 Parar representar cada una de las cifras, lo que necesitamos es que
-haya una cantidad de estados suficiente. Pero obviamente para que sea
-práctico, además su uso tiene que ser fácil distinguir (o dificil
-confundir) esos estados. Por ejemplo, hay relojes analógicos que
-representan los segundos con una aguja que apunta a una circunferencia
-dividida en 60 partes para representar cada número entre 0 y 59, pero
-a veces no es tan simple (sobre todo en aquellos donde el movimiento
-de esta aguja es continuo) decidir qué segundo exacto está
-representando (al menos de hacerlo en menos de un segundo) y parece
-mejor aproximar ese número.
+haya una cantidad de símbolos suficiente. Pero obviamente para que sea
+práctico, además su uso tiene que ser fácil distinguirlos (o dificil
+confundirlos). Por ejemplo, hay relojes analógicos que representan los
+segundos con una aguja que apunta a una circunferencia dividida en 60
+partes para representar cada número entre 0 y 59, pero a veces no es
+tan simple (sobre todo en aquellos donde el movimiento de esta aguja
+es continuo) decidir qué segundo exacto está representando (al menos
+de hacerlo en menos de un segundo) y parece mejor aproximar ese
+número.
 
 
-
+# todo: agregar nota bigit.
 En las computadoras se usan digitos binarios. La palabra /bit/
 proviene de la contracción de /binary digit/. Además, a diferencia de
 la escritura a mano, los números en la computadora tienen una

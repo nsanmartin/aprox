@@ -1,9 +1,9 @@
-#+OPTIONS: tex:dvipng 
 #+begin_html
 --- 
 layout: post 
 title: Espacio muestral y de probabilidad 
 ---
+<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 #+end_html
 
 # todo # revisar, lo tuve que reconstruir de un html y puede que

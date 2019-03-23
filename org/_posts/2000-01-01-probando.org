@@ -1,0 +1,13 @@
+#+begin_html
+--- 
+layout: post 
+title: Probando
+---
+<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+#+end_html
+
+resolver?
+
+\[ x = \sum_{i=0}^n \frac{1}{x^i} \]
+
+\( x = \sum_{i=0}^n x^i \)
