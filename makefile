@@ -1,3 +1,5 @@
+clean-posts:
+	rm ./jekyll/_posts/*
 publish-org:
 	./elisp/publish-org.el
 

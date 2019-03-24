@@ -6,7 +6,7 @@ title: Números de punto flotante
 <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 #+end_html
 
-# todo # citar post numeros enteros
+# todo # citar post números enteros
 
 # Los número en las computadoras suelen representarse como tiras de
 # ceros y unos. Si nuestra intención es representar únicamente números
@@ -31,12 +31,14 @@ title: Números de punto flotante
 # estado de este nuevo bit, $2^m$ números, es decir, en total $2^m + 2^m
 # = 2^{m+1}$ y entonces con $m+1$ bits representamos $2^{m+1}$ números.
 
-Pero muchas veces necesitamos representar número /reales/, no sólo
-enteros. Es decir, si tenemos por ejemplo una lista y queremos saber
-cuantos elementos contiene, o si queremos ver el tercero o el cuarto,
-o cualquier posición en particular, entonces podemos usar números naturales
-(incluyendo el cero) o, como se suele decir, enteros sin signo. Sin
-embargo, existen aplicaciones en las cuales necesitamos números reales.
+En [[./representacion-de-enteros.org][otro post]] vimos algunas formas usadas para representar números
+enteros en las computadoras.  Pero muchas veces necesitamos
+representar número /reales/, no sólo enteros. Es decir, si tenemos por
+ejemplo una lista y queremos saber cuantos elementos contiene, o si
+queremos ver el tercero o el cuarto, o cualquier posición en
+particular, entonces podemos usar números naturales (incluyendo el
+cero) o, como se suele decir, enteros sin signo. Sin embargo, existen
+aplicaciones en las cuales no es suficiente con los enteros.
 
 Esto no significa que si el resultado de una cuenta no es entero
 tengamos que usar necesariamente una representación diferente. Por
@@ -49,37 +51,39 @@ exactitud posible, no hay monedas para cantidades inferiores a un
 centavo. Entonces, expresando las cantidades en centavos el resultado
 obtendrá suficiente precisión.
 
-Es más, cuando necesitamos hacer cuentas con números reales, los
-resultados en general son aproximaciones, no exactos, si bien la
-aproximación puede ser suficientemente cercana para que no resulte un
-problema, como en el ejemplo mencionado.
+Es más, incluso cuando necesitamos hacer cuentas con números reales,
+los resultados obtenidos en la computadora son aproximaciones, no son
+exactos, si bien la aproximación puede ser suficientemente cercana
+para que no resulte un problema, en forma análoga al ejemplo
+mencionado.
 
 Pero para los números reales se usa la representación de /punto
 flotante/. Esta representación es igual a la notación
 científica. Veamos algunos ejemplos decimales.
 
-Supongamos que, de modo análogo a como ocurre con las computadoras,
+Supongamos que, de modo similar a como ocurre con las computadoras,
 tenemos un cantidad fija de 5 dígitos para representar un número, y
 queremos representar el número correspondiente a la población mundial
 que en 2017 [[https://es.wikipedia.org/wiki/Poblaci%C3%B3n_mundial][según wikipedia]] es de 7.350 millones, o sea
 7.350.000.000. Claramente, con 5 dígitos no nos alcanza. ¿Qué podemos
 hacer? Bueno, algo que podemos hacer es decir que vamos a expresar en
-millones que fue lo que hicimos en un principio. Esto no es otra cosa
-que decir que la población mundial es de $7350 \times 10^6$. Tenemos
-entonces el número descompuesto en dos partes. Por otra parte,
-probablemente este número sea una aproximación y no el número exacto,
-pero también probablemente las primeras cifras sí se correspondan con
-el valor exacto. Ahora bien, si fuéramos a usar esta representación en
-la computadora, con el exponente fijo (por ejemplo $10^6$), podríamos
-usarla para estas magnitudes, pero no nos serviría para muchas otras,
-como por ejemplo la división de los gastos del ejemplo de más arriba.
+millones (que fue lo que hicimos en un principio). Esto no es otra
+cosa que decir que la población mundial es de $7350 \times
+10^6$. Tenemos entonces el número descompuesto en dos partes, cuyo
+producto es el número a representar. Por otra parte, probablemente
+este número sea una aproximación y no el número exacto, pero también
+probablemente las primeras cifras (las más significativas) sí se
+correspondan con el valor exacto. Ahora bien, si fuéramos a usar esta
+representación en la computadora, con el exponente fijo (por ejemplo
+$10^6$), podríamos usarla para estas magnitudes (población mundial),
+pero no nos serviría para muchas otras, como por ejemplo la división
+de los gastos del ejemplo de más arriba.
 
 Por ese motivo, es necesario poder decir que el número está expresado
-en millones, o en decenas, o en unidades de mil, etc. De este modo, el
-número se representa de la siguiente manera:
-\[
-f = (-1)^s \times d_1d_2...d_t \times \beta^\epsilon
-\]
+en millones, o en decenas, o en unidades de mil, o en decimales,
+etc. De este modo, el número se representa de la siguiente manera:
+
+ \[ f = (-1)^s \times d_1d_2...d_t \times \beta^\epsilon \]
 
 donde $s$ es el *signo* (0 o 1), los $d_i$ ($i = 1, .., t$) son
 dígitos enteros que componen la *mantisa* y cumplen $0\leq d_i <
@@ -89,26 +93,27 @@ la base). $t$ es la cantidad de dígitos $d_i$ presentes en la mantisa
 y se llama *precisión*.
 
 Es quizá un poco extraño el modo en que expresamos el signo. Después
-de todo, si sólo puede ser $1% o $-1$ podría haber dicho que $s$ valía
+de todo, si sólo puede ser $1$ o $-1$ podría haber dicho que $s$ valía
 eso y que multiplicaba el resto del número. Usé esta otra forma,
-que creo que es la habitual, y supongo que porque en realidad e signo
+que creo que es la habitual, y supongo que porque en realidad el signo
 es un bit, y un bit es como si fuera un dígito binario.
 
-Ahora tomemos el número 8000 como ejemplo. $8000_{10} = 1111101000000_{2}$ y
-necesitamos 13 bits para representarlo. Como la representación es
-binaria, el número que multiplica la mantisa no es una potencia de 10
-sino de 2. Por ejemplo $8000 = 125 \times 2^6$ ya que $125_{10} =
-1111101_2$. Como siempre, podemos representar el mismo número con
-distintas opciones de exponente y mantisa. Por ese motivo, conviene
-adoptar la convención siguiente. Dado que el número esta representado
-con dígitos binarios (cero o uno), entonces con la única excepción del
-cero, todo número tendrá algún uno en su representación. De este modo,
-podemos asumir que, cuando no se trata del cero, hay un uno que es el
-más significativo, es decir, el que está más a la izquierda en la forma
-habitual de escribir los números. Entonces, el número está normalizado
-si ese uno es el único "a la izquierda de la coma", es decir, el el
-valor del exponente es tal que el número que queremos expresar es 
-$1,d_2d_3... \times 2^\epsilon$ ($e$ vendría a ser cualquier exponente).
+Ahora tomemos el número 8000 como ejemplo.  $8000_{10} = 1\ 1111\
+ 0100\ 0000_2$ y necesitamos 13 bits para representarlo. Como la
+ representación es binaria, el número que multiplica la mantisa no es
+ una potencia de 10 sino de 2. Por ejemplo $8000 = 125 \times 2^6$ ya
+ que $125_{10} = 111\ 1101_2$. Como siempre, podemos representar el
+ mismo número con distintas opciones de exponente y mantisa. Por ese
+ motivo, conviene adoptar la convención siguiente. Dado que el número
+ esta representado con dígitos binarios (cero o uno), entonces con la
+ única excepción del cero, todo número tendrá algún uno en su
+ representación. De este modo, podemos asumir que, cuando no se trata
+ del cero, hay un uno que es el más significativo, es decir, el que
+ está más a la izquierda en la forma habitual de escribir los
+ números. Entonces, el número está normalizado si ese uno es el único
+ "a la izquierda de la coma", es decir, el valor del exponente es
+ tal que el número que queremos expresar es $1,d_2d_3... \times
+ 2^\epsilon$ ($e$ vendría a ser cualquier exponente).
 
 De esta forma, ya no hay dos representaciones distintas para un mismo
 número, porque asumimos que están normalizados.
