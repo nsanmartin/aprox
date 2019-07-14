@@ -1,3 +1,13 @@
-Run local server:
+1. Para escribir un post, hacerlo en ./org/_posts. Su nombre debe emezar con una fecha. Todos los posts deben tener por encabezado:
 
-bundle exec jekyll serve
+#+begin_export html
+---
+layout: post
+title: <título del post>
+---
+<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+#+end_export
+
+El elemento con el tag script es para qeu se vean las fórmulas de latex.
+
+2. Una vez escrito hay que "exportar". Es decir, generar los archivos con los cuales jekyll va a hacer el blog. Eso se hace con el makefile (make publish-org) y el resultado se guarda en ./jekyll/
