@@ -1,7 +1,7 @@
 all: clean-jekyll publish-org
 
 clean-jekyll:
-	rm ./jekyll/_posts/*
+	find ./jekyll/_posts -type f -exec rm {} \;
 
 
 
