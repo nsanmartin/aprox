@@ -1,10 +1,10 @@
-#+begin_html
+#+begin_export html
 ---
 layout: post
 title: Representación de números enteros
 ---
 <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
-#+end_html
+#+end_export
 
 Existen al menos dos motivos para representar los números, para hablar
 de ellos y para hacer cuentas con ellos. Bueno, el segundo ejemplo

@@ -1,13 +1,11 @@
-#+begin_html
---- 
-layout: post 
-title: Espacio muestral y de probabilidad 
+#+begin_export html
+---
+layout: post
+title: Espacio muestral y de probabilidad
 ---
 <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
-#+end_html
+#+end_export
 
-# todo # revisar, lo tuve que reconstruir de un html y puede que
-# se haya roto el latex
 
 Usada para modelar distinto tipos de fenómenos, la teoría de la
 probabilidad permite muchas aplicaciones de la matemática.
