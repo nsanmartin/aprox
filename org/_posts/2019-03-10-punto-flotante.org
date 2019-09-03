@@ -2,6 +2,8 @@
 ---
 layout: post
 title: Números de punto flotante
+author: nsm
+email: nsm.aprox@gmail.com
 ---
 <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 #+end_export
