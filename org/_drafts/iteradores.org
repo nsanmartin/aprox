@@ -1,0 +1,82 @@
+En la STL hay distintos tipos de contenedores. Como los distintos
+contenedores tienes diferencias en sus interfaces, eso puede ser un
+límite a la generalidad que puede tener un algoritmo determinado, ya que
+podría no ser capaz de manejar un contenedor. Los iteradores son un
+aabstracción que, justamente, permite operaro sobre colecciones de
+manera genérica. Es decir, podemos usar iteradores para escribir
+algoritmos que pueda operar (cuando esto tenga sentido) tanto sobre
+~vectors~ como ~maps~ o ~lists~. Dado un iterador ~it~, ~*it~ devuelve
+al elemento apuntado por él, mientras que ~++it~ modifica el iterador
+para hacerlo apuntar al elemento siguiente.
+
+Muchos algoritmos de la STL operan sobre una /secuencia/, donde una
+secuencia está definida por dos iteradores ~[begin, end)~. ~begin~
+apunta al primer elemento de la secuencia y ~end~ apunta un lugar más
+allá del último elemento de la secuencia. Así, dado un contenedor ~c~,
+sus elemtntos están comprendidos en la secuancia ~[c.begin(),c.end())~,
+de forma tal que un algoritmo que, por ejemplo, recorra la secuencia así
+definida será lo suficientemente gneral como para poder operar sobre
+cualquier contenedor de la STL.
+
+Existen, en la STL, 5 distintas categorias de iteradores.
+
+| categoria              | operaciones                    | ejemplo        |
+|------------------------+--------------------------------+----------------|
+| input iterator         | * (r), ++, ==, !=              | istream        |
+| output iterator        | * (w), ++                      | ostream        |
+| forward ierator        | * (r/w), ++, ==, !=            | forward_list   |
+| bidiretional iterator  | * (r/w), ++, ==, !=            | list, map, set |
+| random-access iterator | * y [] (r/w), ==, !=, <, <= >= | vector         |
+
+que forman una jerarquia.
+
+Si necesitamos saber a que categoría pertenece una iterador (para
+implementar una versión especializada de una algoritmo, por ejemplo)
+podemos hacerlos mediante los /iterator traits/.
+
+Los iteradores definidos en la STL incluyen ~value_type~,
+~difference_trait~, ~pointer~, ~reference~ e ~iterator_category~. Sin
+embargo, dado un tipo de iterador ~Iter~, en lugar de usar, por ejemplo,
+~Iter::iterator_category~, se usa
+~std::iterator_traits<Iter>::iterator_category~.
+
+Esto es lo mismo que usar ~Iter::iterator_category~ si ~Iter~ es un tipo
+de iterador de la STL. La STL provee el struct
+
+#+begin_src c++
+template <typename T>
+struct iterator_traits<T*> {
+    using difference_type   = ptrdiff_t;
+    using value_type        = T;
+    using pointer           = T*;
+    using reference         = T& reference;
+    using iterator_category = random_access_iterator_tag;
+};
+#+end_src
+
+
+con los cual podemos conocer los traits también de los punteros. O sea,
+mientas que, por ejemplo,
+
+#+begin_src c++
+typename iterator_traits<Iter>::value_type it;
+#+end_src
+
+
+sirve para tanto iteradores como punteros,
+
+#+begin_src c++
+typename Iter::value_type it;
+#+end_src
+
+sirve para iteradores pero no para punteros.
+
+Por último, vamos a considerar los /iterator adaptors/. Hay 6:
++ reverse_iterator
++ back_insert_iterator
++ front_insert_iterator
++ insert_iterator
++ move_iterator
++ raw_storage_iterator
+
+

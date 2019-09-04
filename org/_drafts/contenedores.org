@@ -1,0 +1,201 @@
+#+begin_export html
+---
+layout: post
+title: Representación de números enteros
+author: nsm
+email: nsm.aprox@gmail.com
+---
+<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+#+end_export
+
+Un contenedor mantiene (diría /contiene/ pero suena redundante) una
+secuencia de objetos. Esto es útil porque en vez de que cada objeto
+esté en un lugar propio particular que yo tengo que recordar para
+usarlo, puedo guardarlos todos juntos y sólo acordarme del lugar donde
+está la colección. Esto implica, sin embargo, que entonces me vea por
+ejemplo obligado a tener que buscarlo dentro de ese contenedor, pero
+eso es mejor a tener que recordar todo el tiempo dónde está cada cosa.
+
+El tipo más simple de contenedor en C++ es un arreglo (un /built-in
+array/), que se define, dado un tipo ~T~ y un entero ~N~, así:
+
+#+begin_src c++
+T x[N]{};
+#+end_src
+
+
+De este modo, el arreglo ~x~ contiene ~N~ elementos de tipo ~T~ y
+accedemos a la i-ésima posición mediante ~x[i]~. En su libro,
+Stroustroup dice que este es uno de los "casi" contenedores (almost
+containers), debido a que ofrece muy pocas facilidades. Por ejemplo,
+dado $M>N$, si hacemos ~x[M]~ no se hace un chequeo de si $M$ está en
+el rango correcto ($[0,N)$) y el resultado es indefinido.
+
+En algunos programas se usa la macro:
+
+#+begin_src c++
+#define SIZE(X) (sizeof(x)/sizeof(*x))
+#end_src
+
+Pero creo que esto no tiene mucha utilidad, ya que en el contexto en que
+definimos el arreglo conocemos en tiempo de compilación su tamaño. Y si
+por ejemplo queremos usar esa macro con un arreglo que recibimos por
+argumento, entonce no sirve, porque ~sizeof(x)~ va a dar el tamaño de
+~T*~ y no del arreglo. (Y por otra parte no es buena idea usar macros).
+
+Además de definir un arreglo como en el ejemplo de arriba, se puede
+hacer:
+
+#+begin_src c++
+T* x = new T[N]{};
+// ...
+delete[] x;
+#+end_src
+
+
+En este caso es necesario hacer el ~delete~ para no desperdiciar
+memoria. La diferencia entre las dos formas es que el primer caso usa
+memoria de la pila (/stack/) mientras que en el otro del /heap/. Cuando
+se "sale" de una función, entonces la memoria ocupada en la pila se
+libera, mientras que la memoria del heap permanece reservada, y de ahí
+que sea necesario el ~delete[]~.
+
+Otra forma de obtener el tamaño de un arreglo (pero sólo si esta
+definido en la pila, no en el heap) es usar algo así:
+
+#+begin_src c++
+template<typename T, std::size_t N>
+auto size(const T(&)[N]) { return N; }
+#+end_src
+
+
+Acá, el compilador va a generar la función size correspondiente al
+arreglo para el cual se llame con el $N$ apropiado. Es decir, si por
+ejemplo teníamos:
+
+#+begin_src c++
+int x[7]{};
+#+end_src
+
+
+y aplicamos la función ~size(x)~ el compilador va a instanciar el
+template con la función
+
+#+begin_src c++
+std::size_t size(const int(&)[7]) { return 7; }
+#+end_src
+
+
+La STL provee un contenedor similar a este: ~std::array~:
+
+#+begin_src c++
+std::array<T,N> y{};
+#+end_src
+
+
+Que tiene algunas ventajas. Por ejemplo, conoce su tamaño (~size~),
+tiene operador de asignación (es decir que podemos asignar un valor al
+arreglo, no sólo a sus elementos). También podemos acceder a sus
+elementos mediante iteradores. También podemos acceder a sus elementos
+chequeando de no irnos fuera del rango del arreglo usando ~at~. Por
+ejemplo si hacemos:
+
+#+begin_src c++
+int x[3];
+x.at(5); // error en tiempo de ejecución.
+#+end_src
+
+
+obtenemos la excepción "std::out_of_range". Algo que puede considerarse
+como una limitación en algunas aplicaciones es que este tipo de arreglo
+debe saber su tamaño en tiempo de compilación, es decir su tamaño tiene
+que ser una "constant expresion". Entonces, si su tamaño sólo puede ser
+conocido en tiempo de ejecución tal vez podemos preferir otro tipo de
+contenedores.
+
+Otro contenedor, entonces (quizá el más usado) es ~std::vector~. Al
+igual que los arreglos comunes, sus elementos se almacenan en forma
+contigua, permitiendo acceso aleatorio (en $O(1)$). Pero tiene la
+ventaja de que su tamaño se ajusta dinámicamente. Con ~push_back~
+podemos insertar un elemento al final de forma eficiente ($O(1)$
+amortizado). También permite abstraer el manejo de la memoria (o sea, no
+hay que hacer ~delete~).
+
+Los ~std::vector~s, además de tamaño tienen una /capacidad/, que puede
+modificarse con ~reserve~ y con ~shrink_to_fit~. Así, si sabemos de
+antemano cuantos elementos vamos a usar (o si conocemos una cota)
+podemos reservar lugar para que no haya que redimensionar el
+vector. Con ~shrink_to_fit~ se libera la memoria reservada que no se
+está usando. Es mucho mejor usar un vector que un array común ya que
+no sólo conoce su tamaño y puede redimensionarse en forma dinámica,
+además trae consigo algunas operaciones y no tenemos que ocuparnos del
+manejo de la memoria que usa.
+
+Los ejemplos mencionados pueden catalogarse de contenedores basados en
+memoria continua, en oposición a los contenedores basados en nodos
+(node-based). Los primeros utilizan porciones de memoria (obviamente)
+contigua (de ahí el nombre). Esto implica que, por ejemplo, para
+insertar un elemento en la mitad haya que mover de ahí en adelante
+todos los otros elementos para hacerle un lugar. En los segundos, cada
+porción de memoria está asociado a uno solo de los elementos en
+cuestión. Esto facilita la inserción ya que no hace falta mover la
+mitad de los elementos como en el ejemplo anterior sino sólo reservar
+memoria para un nuevo nodo y actulizar los punteros de eso nodo y uno o
+dos más.
+
+Entre los contenedores de este tipo se incluyen las listas
+(~std::list~ (double linked) y ~std::forward_list~ (singly-linked)) y
+~std::deque~. Pero también los contenedores /asociativos/ como
+map. Pero también se suele diferenciar entre son los contenedores
+secuenciales (vector, deque, forward_list y list) y los
+asociativos. Además hay vectores asociativos como unordered_map que no
+se basa en nodos. Cuando por ejemplo uno busca por un elemento en un
+~map~, lo que hace es recorrer una arbol de búsqueda balanceado
+comparando $O(log(n))$ veces, mientras que al buscar en un
+~unordered_map~ se aplica una función de hash para usar ese resultado
+para indexar en $O(1)$ en una tabla (si la función de hash es buena).
+
+~std::map~ se usa como un diccionario. Dados los tipos ~T,U~, definimos
+un ~map~ asi:
+
+#+begin_src c++
+std::map<T,U> d;
+#+end_src
+
+
+~map~ tiene el operador ~[]~ que permite tando definir una clave como
+accederla. Sin embargo, si una valor $k$ no está definido en $d$,
+entonces ~d[k]~ va a definirlo y asociarlo con el valor por defecto del
+tipo correspondiente (~U{}~ en este ejemplo). Podemos en cambio usar ~at~
+para tirar una excepción si la clave no está definida. O, si queremos
+preguntar a ver si está usamos:
+
+#+begin_src c++
+auto key = T{};
+auto it = d.find(key);
+if (it != d.end()) {
+   // clave encontrada ...
+} else {
+  // clave no encontrada ...
+}
+#+end_src
+
+
+~std::map<T,U>::find~ devuelve un iterador que apunta a un par clave
+valor, de modo que para acceder a estos tenemos que hacer:
+
+#+begin_src c++
+it->first; // clave
+it->second // valor
+#+end_src
+
+Un ~std::set~ es como un map pero sin valores. También
+existen los contenedores ~std::multiset~ y ~std::multimap~ que permiten
+guardar más de un aclave con el mismo valor.
+
+Por último, podemos mencionar además los /container adaptors/ que son
+contenedores que tiene una interfaz típicamente más restrigida, pero
+adecuada a alguna aplicación en particular: ~std::stack~, ~std::queue~
+y ~std::priority_queue~.
+
+
