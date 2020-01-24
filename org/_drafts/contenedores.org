@@ -8,21 +8,82 @@ email: nsm.aprox@gmail.com
 <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 #+end_export
 
-Un contenedor mantiene (diría /contiene/ pero suena redundante) una
-secuencia de objetos. Esto es útil porque en vez de que cada objeto
-esté en un lugar propio particular que yo tengo que recordar para
-usarlo, puedo guardarlos todos juntos y sólo acordarme del lugar donde
-está la colección. Esto implica, sin embargo, que entonces me vea por
-ejemplo obligado a tener que buscarlo dentro de ese contenedor, pero
-eso es mejor a tener que recordar todo el tiempo dónde está cada cosa.
+Un contenedor contiene (valga la redundancia) una secuencia de
+objetos. Si no tuvieramos contenedores, tendríamos que recordar el
+lugar de cada uno para cada vez que necesitamos usarlo. En cambio,
+podemos guardarlos todos juntos y sólo recordar el lugar donde está la
+colección. Esto implica, sin embargo, que entonces haya que tener que
+buscarlo dentro de ese contenedor cuando lo necesitemod. Pero eso es
+mejor a tener que anotar dónde está cada cosa. Perderíamos mucho
+tiempo pensando qué nombres poner a las variables, y los de muchas de
+ellas serían necesariamente malos, o estarían numeradas por ejemplo,
+etc.
 
-El tipo más simple de contenedor en C++ es un arreglo (un /built-in
-array/), que se define, dado un tipo ~T~ y un entero ~N~, así:
+Pero hay otra ventaja que trae el uso de los contedores. Una vez que
+agrupamos lo objetos en una colección pensamos en la colección misma y
+simplificamos los problemas. Supongamos que queremos averiguar el
+promedio de una cierta cantidad de mediciones. Sin un contenedor que
+las agrupe tendíamos que hacerlo a mano: escribir algo como:
+
+#+begin_src c++
+double sum = x1 + x2 + x3 + x4 //...
+double mean = sum / N;
+#+end_src
+
+y esto siempre que la cantidad de variables no se demasiado
+grande. Además ¿de dónde sacamos ~N~? La tuvimos que calcular a mano
+(al numerar las variables).
+
+Entonces, podemos hacer algo como 
+#+begin_src c++ 
+double mean = std::acumulate(x.begin(), x.end(), 0, std::plus<double>()) / x.size();
+#+end_src
+
+Quizá para alguno no muy acostumbrado a c++ esto pueda parecer un poco
+verborrágico. En un lenguaje como R, por ejemplo, sólo hacía falta
+escribir
+
+#+begin_src R
+resutl = mean(x)
+#+end_src
+
+Bueno, la comparación quizá no sea válida, porque nadie va a pretender
+que c++ tenga definida la función ~mean~ en su ~namespace~
+global. Pero en R también podemos hacer eso:
+
+#+begin_src R
+mean = Reduce("+",x)
+#+end_src
+
+Estas dos funciones, ~Reduce~ y ~srd::accumulate~ son bastante
+parecidas. La idea es que tenemos una colección, una operación binaria
+uno de cuyos parámetros será del tipo de los elementos de la
+colección, y un valor inicial, que también es parámetro de la función,
+y es del mismo tipo que su resultado. En este caso particular la
+operación es la suma, o sea que los parámetros son ambos del mismo
+tipo. En ~Reduce~ el valor inicial está implícito, y es el cero, pero
+podemos pasarle otro valor. La diferencia más importante es la forma
+en que se indica la colección. En c++ le decimos no la colección sino
+un rango dentro de la colección (en este ejemplo es el rango con todos
+los elementos). Pero esto es bueno, pero entonces puede usarse para
+casos en los que sólo queremos aplicarle una función a una parte. 
+
+Per veamos ahora qué contenedores hay en C++ y la stl.
+
+
+El tipo más simple es un arreglo (un /built-in array/), que se define,
+dado un tipo ~T~ y un entero ~N~, así:
 
 #+begin_src c++
 T x[N]{};
 #+end_src
 
+La verdad que este tipo no suele ser la mejor opción nunca. un
+problema que puede aparecer con el array es que no sabemos cuantos
+elementos contiene. Tenemos que memorizarlo nosotros, y pasarselo a la
+función que lo vaya a usar. Esto en sí no es muy grave, creo. Pero lo
+que sí es que si por algún error hacemos ~x[M]~, donde ~M~ es mayor al
+tamaño del arreglo, entonces obtenemos una conducta idefinida.
 
 De este modo, el arreglo ~x~ contiene ~N~ elementos de tipo ~T~ y
 accedemos a la i-ésima posición mediante ~x[i]~. En su libro,
