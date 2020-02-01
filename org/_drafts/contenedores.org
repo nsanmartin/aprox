@@ -8,16 +8,15 @@ email: nsm.aprox@gmail.com
 <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 #+end_export
 
-Un contenedor contiene (valga la redundancia) una secuencia de
-objetos. Si no tuvieramos contenedores, tendríamos que recordar el
-lugar de cada uno para cada vez que necesitamos usarlo. En cambio,
-podemos guardarlos todos juntos y sólo recordar el lugar donde está la
-colección. Esto implica, sin embargo, que entonces haya que tener que
-buscarlo dentro de ese contenedor cuando lo necesitemod. Pero eso es
-mejor a tener que anotar dónde está cada cosa. Perderíamos mucho
-tiempo pensando qué nombres poner a las variables, y los de muchas de
-ellas serían necesariamente malos, o estarían numeradas por ejemplo,
-etc.
+Los contenedores sirven para guardar secuencias de objetos. Si no
+tuvieramos contenedores, tendríamos que recordar el lugar de cada uno
+para cada vez que necesitamos usarlo. En cambio, podemos usar una
+colección y sólo recordar el lugar donde está ella. Esto implica, sin
+embargo, que entonces haya que tener que buscarlo dentro de ese
+contenedor cuando lo necesitemos. Pero eso es mejor a tener que anotar
+dónde está cada cosa. Perderíamos mucho tiempo pensando qué nombres
+poner a las variables, y los de muchas de ellas serían necesariamente
+malos, o estarían numeradas por ejemplo, etc.
 
 Pero hay otra ventaja que trae el uso de los contedores. Una vez que
 agrupamos lo objetos en una colección pensamos en la colección misma y
@@ -36,7 +35,7 @@ grande. Además ¿de dónde sacamos ~N~? La tuvimos que calcular a mano
 
 Entonces, podemos hacer algo como 
 #+begin_src c++ 
-double mean = std::acumulate(x.begin(), x.end(), 0, std::plus<double>()) / x.size();
+double mean = std::acumulate(x.begin(), x.end(), 0, std::plus<double>{}) / x.size();
 #+end_src
 
 Quizá para alguno no muy acostumbrado a c++ esto pueda parecer un poco
@@ -49,63 +48,210 @@ resutl = mean(x)
 
 Bueno, la comparación quizá no sea válida, porque nadie va a pretender
 que c++ tenga definida la función ~mean~ en su ~namespace~
-global. Pero en R también podemos hacer eso:
+global ni en ~std~. Pero en R también podemos hacer eso:
 
 #+begin_src R
-mean = Reduce("+",x)
+mean = Reduce("+",x,0) / length(x)
 #+end_src
 
-Estas dos funciones, ~Reduce~ y ~srd::accumulate~ son bastante
-parecidas. La idea es que tenemos una colección, una operación binaria
-uno de cuyos parámetros será del tipo de los elementos de la
-colección, y un valor inicial, que también es parámetro de la función,
-y es del mismo tipo que su resultado. En este caso particular la
-operación es la suma, o sea que los parámetros son ambos del mismo
-tipo. En ~Reduce~ el valor inicial está implícito, y es el cero, pero
-podemos pasarle otro valor. La diferencia más importante es la forma
-en que se indica la colección. En c++ le decimos no la colección sino
-un rango dentro de la colección (en este ejemplo es el rango con todos
-los elementos). Pero esto es bueno, pero entonces puede usarse para
-casos en los que sólo queremos aplicarle una función a una parte. 
+Estas dos funciones, ~Reduce~ y ~std::accumulate~ son bastante
+parecidas (hay una función [[https://en.cppreference.com/w/cpp/algorithm/reduce][~std::reduce~]], pero parece no estar
+soportada en todas las implementaciones todavía). La idea es que
+tenemos una colección, una operación binaria y un valor inicial. Esta
+operación binaria es una función uno de cuyos parámetros es del tipo
+de los elementos de la colección, mientras que el otro tiene que ser
+del mismo tipo que su resultado (puede ser cualquier tipo), incluyendo
+(como en este ejemplo) el tipo de los elementos de la colección.
 
-Per veamos ahora qué contenedores hay en C++ y la stl.
+En este caso particular la operación es la suma, o sea que los
+parámetros son ambos del mismo tipo, y el resultado también. La
+diferencia más importante es la forma en que se indica la
+colección. En c++ le decimos no la colección sino un rango dentro de
+la colección (en este ejemplo es el rango con todos los
+elementos). Pero esto es bueno, porque entonces puede usarse para
+casos en los que sólo queremos aplicarle una función a una parte.
+
+Tal vez alguno prefiera calcular la media de un forma distinta, por
+ejemplo:
+
+#+begin_src c++
+decltype (x)::value_type sum{};
+for (const auto& elem: x) { sum += x; }
+auto result = sum / x.size(); 
+#+end_src
+
+Pero en ese caso, por un lado, tenemos que escribir más y por otro
+dejamos de aprovechar la posibilidad que nos da ~reduce~ (o
+~accumulate~) de pensar dirctamente en la colección, y volvemos a
+mirar los elementos y operardirectamente sobre ellos. Por último, es
+más fácil equivocarnos también si volvemos a escribir para estos
+parámetros en particular lo que ya está hecho en forma más general en
+~accumulate~.  
+
+Otra cosa que en este ejemplo vemos (y que está en cada una de las
+versiones que vimos) es que no tenemos que "perder" tiempo buscando
+ninguno de los datos, porque de todas formas íbamos a tener que verlos
+todos. O sea que acá, no sólo el contenedor nos sirve para calcular la
+cantidad de datos que hay, sino que además no trae aparejado un
+"costo" mayor, como sí el caso en que, por ejemplo, queremos saber si
+está tal o cual medición. Pero en ese caso, como dije antes,
+tendríamos que usar nuestra propia memoria!  (en lugar de la de la
+computadora).
+
+Ahora veamos cuál es el contenedor más simple (si es que llega a ser
+contenedor) que hay en C++. Digo "si llega a ser" porque, como vamos a
+ver, le faltan algunas cosas,  (lo cual es sufuciente por otra parte
+como para que siempre preferamos usar otro contenedor)
 
 
-El tipo más simple es un arreglo (un /built-in array/), que se define,
+Estoy hablando del arreglo (un /built-in array/), que se define,
 dado un tipo ~T~ y un entero ~N~, así:
 
 #+begin_src c++
 T x[N]{};
 #+end_src
 
-La verdad que este tipo no suele ser la mejor opción nunca. un
-problema que puede aparecer con el array es que no sabemos cuantos
-elementos contiene. Tenemos que memorizarlo nosotros, y pasarselo a la
-función que lo vaya a usar. Esto en sí no es muy grave, creo. Pero lo
-que sí es que si por algún error hacemos ~x[M]~, donde ~M~ es mayor al
-tamaño del arreglo, entonces obtenemos una conducta idefinida.
-
-De este modo, el arreglo ~x~ contiene ~N~ elementos de tipo ~T~ y
-accedemos a la i-ésima posición mediante ~x[i]~. En su libro,
-Stroustroup dice que este es uno de los "casi" contenedores (almost
-containers), debido a que ofrece muy pocas facilidades. Por ejemplo,
-dado $M>N$, si hacemos ~x[M]~ no se hace un chequeo de si $M$ está en
-el rango correcto ($[0,N)$) y el resultado es indefinido.
-
-En algunos programas se usa la macro:
+Un problema que puede aparecer con el array tiene que ver con saber
+cuantos elementos contiene, es decir, cuál es el valor de ~N~. Si
+estamos escribiendo una función y declaramos un array, entonces
+sabemos qué tamaño tiene, porque lo tuvimos que decir al hacerlo (es
+el valor de ~N~, que no es una variable si no un número
+constante). Ahora supongamos que en esta función que estamos
+escribiendo nos fijamos, como parte de lo que tenemos que hacer y para
+distintas posiciones, si el valor ahí es mayor estricto que el
+anterior y el posterio o menor estricto también que ambos. Para hacer
+eso podríamos hacer al como
 
 #+begin_src c++
-#define SIZE(X) (sizeof(x)/sizeof(*x))
-#end_src
+size_t position = // ... la posición que sea.
+bool is_local_extremum = x[position - 1] < x[position] && x[position] < x[position + 1];
+if (is_local_extremum) {
+   // ...
+} else {
+   // ..
+}
+#+end_src 
 
-Pero creo que esto no tiene mucha utilidad, ya que en el contexto en que
-definimos el arreglo conocemos en tiempo de compilación su tamaño. Y si
-por ejemplo queremos usar esa macro con un arreglo que recibimos por
-argumento, entonce no sirve, porque ~sizeof(x)~ va a dar el tamaño de
-~T*~ y no del arreglo. (Y por otra parte no es buena idea usar macros).
+Es importante notar que para hacer esto en necesario que ~position >=
+1~ y además que ~position < N - 1~. Y eso lo sabemos porque nosotros
+mismos escribimos el valor de ~position~ así como el de ~N~. Incluso
+en este caso (demasiado simple), nosotros mismos podríamos
+equivocarnos y poner valores de ~position~ y de ~N~ que no sean
+correctos ...
 
-Además de definir un arreglo como en el ejemplo de arriba, se puede
-hacer:
+Pero ya vemos motivos para definir una función que haga esto. Primero,
+que si lo vamos a usar muchas veces, entonces para qué escribir todo
+de nuego cada vez y no, en cambio, escribir algo para poder
+directamente hacer:
+
+#+begin_src c++
+if (is_local_extremum(x, position)) { // ...
+#+end_src 
+
+Y hay otro motivo también. Si bien elejimos el nombre de la variable
+booleana del primer ejemplo para que se vea fácil qué estamos
+haciando, y esto hace que se vea a simple vista, podríamos poner
+ejemplo que ocupe algunas líneas más donde resulte más confuso y no se
+arregle nombrando una variable. En todo caso, a lo que voy es que con
+una función le damos un nombre a lo que hace un bloque de código y eso
+hace que quien lo lee (otra persona o uno mismo en unos días) no
+necesite estar calculando qué hacen las líneas para tener una idea de,
+al menos, lo que debería estar haciendo ese bloque.
+
+Muy bien, escribamos nuestra función. Lo primero que tenemos que hacer
+es pensar en la "signature", es decir, que valor va a devolver (o
+"tener") y que parámetros va a recibir. Bueno, devolver va a de volver
+un bool. El problema está en el primer parámetro, el arreglo (para
+ver esto era todo este rodeo). Supongamos (para que sea más claro) que
+N es 4. Una opción podría ser:
+
+#+begin_src c++
+bool is_local_extremum(const int x[4], size_t position);
+#+end_src
+
+Esto es una opción. Pero el problema que tiene es que podría ser más
+general y no lo es. Si alguien quisiera hacer esto con
+arreglos de otro tamaño que no sea ~4~ tendría que hacer un versión
+distinta. Y aparece un nuevo problema: si ya no sé el tamaño del
+arreglo entonces no puedo chequear el la posición que me pasan no está
+fueera del rango.
+
+Acá es cuando empezamos a ver que es mejor usar otro tipo de
+dato. Porque no es buena idea pasar un puntero sin sin decir el
+tamaño. Es decir, si hacemos
+#+begin_src c++
+bool is_local_extremum(const int x[], size_t position);
+#+end_src
+
+o
+
+#+begin_src c++
+bool is_local_extremum(const int* x, size_t position);
+#+end_src
+
+Entonces adentro de nuestra función no vamos a poder chequear
+nunca. Tenemos la opción de confiar en que el usuario de nuestra
+función nunca va a cometer el error de pasar una posión
+incorrecta. Pero eso no sirve, porque igualmente eso puede pasar, por
+más que confiemos en que no. Si simplemente nos lavamos las manos ya
+hacemos ~x[n]~, cuando alguien pase una posición incorrecta el
+programa va a tener una conducta indefinida. Y quizá resulte, para
+cuando ocurra, dificil de averiguar qué está pasando, porque nadie va
+a estar pensando en esta función. Quizá algún usuario de nuestra
+función también confió en el de la suya, y así.
+
+Entonces tenemos (al menos) dos formas de obtener el tamaño del
+arreglo. Una es pedirlo directamente:
+
+#+begin_src c++
+bool is_local_extremum(const int* x, size_t position, size_t x_size);
+#+end_src
+
+Acá le estamos dando una poco más de trabajo a nuestro cliente: cada
+que que use la función tiene que, además, pasar ese valor. No es tan
+grave, pero igual hay un problema, que sí lo es: también se puede
+equivocar. ¿Qué pasa si el valor que pasa de ~x_size~ es incorrecto?
+Estamos en la misma.
+
+Podemos entonces hace algo mejor:
+#+begin_src c++
+template<size_t N>
+bool is_local_extremum(const int (&x)[N], size_t n);
+#+end_src
+
+Este template va a generar todas las funciones que sean necesarias
+cuando se compile el código (es decir, si se la usa con un tipo ~T~,
+entonces se va a generar una para el tipo ~T~, si no, no). Y así
+rápidamente alguno va a decir ¿pero porque restringir el tipo del
+array en el template y no hacerlo parámetro también? Y así escribe:
+
+#+begin_src c++
+template<typename T,size_t N>
+bool is_local_extremum(const T (&x)[N], size_t n);
+#+end_src
+
+Esto sirve para ~int~, pero también para ~short~, ~long~, ~float~,
+~double~, etc. Esto ya parece estar bastante bien. Pero de todas
+formas podría mejorar: podríamos usar [[https://en.cppreference.com/w/cpp/container/array][~std::array~]] en vez de una
+arreglo común y silvestre. Con esto básicamente accedemos a varias
+"funcionalidades" que están ya provistas en la stl. En particular,
+tenemos el método ~at~ que accede al enésimo elemento pero tirando una
+excepción ~std::out_of_range~ si la posión pedida está fuera del
+rango. Yo creo que esto está muy bien porque si alguien pide una
+posición fuera del rango algo anda mal y hay que arreglar eso.
+
+Pero pasemos a otro problema: ¿qué pasa si nuestra colección tiene un
+tamaño que no podemos conocer mientras estamos escribiendo el
+programa?
+
+O sea, supongamos que nuestro programa lee de un archivo que provee un
+usuario los datos, y que la cantidad que haya varie (es decir, no
+queremos pedirle a nuestro cliente que su archivo tiene que tener una
+cantidad fija de datos como para que sirva el programa). En este caso
+se dice que el tamaño del arreglo no se conoce en tiempo de
+compilación sino en tiempo de ejecución.
+
+Una (mala) opción es la siguiente:
 
 #+begin_src c++
 T* x = new T[N]{};
@@ -113,103 +259,91 @@ T* x = new T[N]{};
 delete[] x;
 #+end_src
 
-
-En este caso es necesario hacer el ~delete~ para no desperdiciar
-memoria. La diferencia entre las dos formas es que el primer caso usa
-memoria de la pila (/stack/) mientras que en el otro del /heap/. Cuando
-se "sale" de una función, entonces la memoria ocupada en la pila se
-libera, mientras que la memoria del heap permanece reservada, y de ahí
-que sea necesario el ~delete[]~.
-
-Otra forma de obtener el tamaño de un arreglo (pero sólo si esta
-definido en la pila, no en el heap) es usar algo así:
-
-#+begin_src c++
-template<typename T, std::size_t N>
-auto size(const T(&)[N]) { return N; }
-#+end_src
-
-
-Acá, el compilador va a generar la función size correspondiente al
-arreglo para el cual se llame con el $N$ apropiado. Es decir, si por
-ejemplo teníamos:
-
-#+begin_src c++
-int x[7]{};
-#+end_src
+Nótese que tuvimos que agregar el ~delete[]~ al final. Esto porque en
+lugar de ubicarse en la ~stack~ como los ejemplos anteriores, ~new~ le
+pide memoria al sistema oerativo que se reserva en el ~heap~. la stack
+es una porción de memoria que es propia de una función, una vez que
+hacemos ~return~ se libera toda la memoria que la función había
+reservado en la stack. La memoria del heap, en cambio, no. Una función
+reserva memoria en el heap, y una retorna esa memoria sigue
+reservada. Si esa función no hace ~delete[]~ (o si no le pasa el
+puntero a otra función ara que lo haga) entonces esa memoria queda
+reservada inutilmente durante toda la vida del programa. Esto es un
+problema. Pero a veces necesitamos pedir memoria del heap: supongamos
+que necesitamos un arreglo muy grande. Hay casos en los que el arreglo
+es muy grande para la stack pero podemos usar el heap
+tranquilamente. Y el otro caso, bastante frecuente, es que a veces
+queremos que la vida de los objetos no esté limitada a la stack de la
+función en la que los creamos. En ese caso vamos a preferir el heap y
+no andar copiándolo cada vez que pasamo de una función a otra.
 
 
-y aplicamos la función ~size(x)~ el compilador va a instanciar el
-template con la función
+Para esto la stl provee una cantidad de distintos contenedores, el
+probablemente mas usado es el ~std::vector~:
 
 #+begin_src c++
-std::size_t size(const int(&)[7]) { return 7; }
+std::vector x(N);
 #+end_src
 
+El ~vector~ guarda su selementos en forma contigua. Esto permite
+acceso aleatorio en (en $O(1)$) (usando ~at~ o ~operator[]~, lo bueno
+de ~at~ es que chequea que en índice esté dentro del vector). Además,
+su tamaño se puede modificar en /runtime/ (son ~resize~), con lo que
+puede usarse para los casos en no sabemos qué cantidad de elementos
+vamo sa tener que guardar de antemano. Con ~push_back~ podemos
+insertar un elemento al final de forma eficiente ($O(1)$
+amortizado). Amotizado significa que al hacer ~push_back~ no
+necesariamente sea $O(1)$. Lo es si la capacidad del vector es mayor a
+su tamaño. Entonces sería similar a usar ~at~. Pero si ya no hay
+capacidad para agregar, entones no queda otra que pedir más
+memoria. pero no sólo hay que pedir más memoria. Como los elementos se
+guardan en forma contigua, entonces necesitamos pedir memoria para que
+entren los objetos guardados, más el nuevo, y copiar todo ahí y
+finalmente liberar la memoria donde estaban anteriorente. Todo eso es
+$O(n)$. Pero es "amortizado" porque esto no ocurre siempre. Cada vez
+que se colma la capacidad, el arreglo subyascente se duplica, de
+forma tal que cada $n$ inserciones seguidas estaríamos haciéndo esto
+$\log_2{n}$ veces. Otra opción es usar ~reserve~ de forma tal de
+aumentar la capacidad y así reducir la cantidad de veces que se pide
+más memoria.
 
-La STL provee un contenedor similar a este: ~std::array~:
+También permite abstraer el manejo de la memoria (o sea, no hay que
+hacer ~delete~). ¿Cómo evitamos hacer delete? Bueno, cuando el
+~vector~ queda fuera del scope se destruye y con eso se liberan los
+recursos que manejaba, es decir, la memoria que había reservado del
+heap. Por ejemplo, si hacemos ~return~ de una función donde habíamos
+declarado el ~vector~, entonces se lo destruye.
 
-#+begin_src c++
-std::array<T,N> y{};
-#+end_src
+Por último, el vector permite que volvamos de una función y que sea
+accesible desde la función que la llamó. Básicamente lo que podemos
+hacer es devolver el vector: ~std::vector<T> foo();~. Esto va a hacer
+que el vector se construya directamente en el /scope/ de la función
+que llama a ~foo()~ y no dentro de ~foo()~ (por más que dentro de
+~foo()~ se loa declare inicialmente). Ver [[https://es.cppreference.com/w/cpp/language/copy_elision][copy elision]]
+
+# ######## //////////////////////////////
+
+Tanto los arreglos /bulit-int/ como los ~std::array~ como los
+~std::vector~ usan memoria contigua. Existen sin embargo otros
+contenedores que no. Por ejemplo, hay contenedores que se basan en
+nodos y que sus elementos pueden estar ubicados en distintas partes de
+la memoria en forma no contigua. Esto puede ser una ventaja o
+desventaja, según el caso. Por ejemplo, para insertar al principio de
+un contenedor de memoria contigua hay que mover todos los demás, con
+lo que resulta una operación $O(n)$. En cambio, en una lista enlazada
+es $O(1)$ porque es sólo cuestión de crear un nodo y actualizar los
+punteros para insertarlo en la posición que sea. Entre los
+contenedores de este tipo se incluyen ~std::list~ (double linked) y
+~std::forward_list~ (singly-linked), ~std::deque~, ~std::set~ y
+~std::map~.
 
 
-Que tiene algunas ventajas. Por ejemplo, conoce su tamaño (~size~),
-tiene operador de asignación (es decir que podemos asignar un valor al
-arreglo, no sólo a sus elementos). También podemos acceder a sus
-elementos mediante iteradores. También podemos acceder a sus elementos
-chequeando de no irnos fuera del rango del arreglo usando ~at~. Por
-ejemplo si hacemos:
+Algunos de estos contenedores son además /asociativos/ como map y
+set, mientras que otros (deque, forward_list y list) secuenciales
+(como vector, array y string). Un contenedor es *asociativo* si es
+ordenado y además permite buscar rápidamente una clave.
 
-#+begin_src c++
-int x[3];
-x.at(5); // error en tiempo de ejecución.
-#+end_src
-
-
-obtenemos la excepción "std::out_of_range". Algo que puede considerarse
-como una limitación en algunas aplicaciones es que este tipo de arreglo
-debe saber su tamaño en tiempo de compilación, es decir su tamaño tiene
-que ser una "constant expresion". Entonces, si su tamaño sólo puede ser
-conocido en tiempo de ejecución tal vez podemos preferir otro tipo de
-contenedores.
-
-Otro contenedor, entonces (quizá el más usado) es ~std::vector~. Al
-igual que los arreglos comunes, sus elementos se almacenan en forma
-contigua, permitiendo acceso aleatorio (en $O(1)$). Pero tiene la
-ventaja de que su tamaño se ajusta dinámicamente. Con ~push_back~
-podemos insertar un elemento al final de forma eficiente ($O(1)$
-amortizado). También permite abstraer el manejo de la memoria (o sea, no
-hay que hacer ~delete~).
-
-Los ~std::vector~s, además de tamaño tienen una /capacidad/, que puede
-modificarse con ~reserve~ y con ~shrink_to_fit~. Así, si sabemos de
-antemano cuantos elementos vamos a usar (o si conocemos una cota)
-podemos reservar lugar para que no haya que redimensionar el
-vector. Con ~shrink_to_fit~ se libera la memoria reservada que no se
-está usando. Es mucho mejor usar un vector que un array común ya que
-no sólo conoce su tamaño y puede redimensionarse en forma dinámica,
-además trae consigo algunas operaciones y no tenemos que ocuparnos del
-manejo de la memoria que usa.
-
-Los ejemplos mencionados pueden catalogarse de contenedores basados en
-memoria continua, en oposición a los contenedores basados en nodos
-(node-based). Los primeros utilizan porciones de memoria (obviamente)
-contigua (de ahí el nombre). Esto implica que, por ejemplo, para
-insertar un elemento en la mitad haya que mover de ahí en adelante
-todos los otros elementos para hacerle un lugar. En los segundos, cada
-porción de memoria está asociado a uno solo de los elementos en
-cuestión. Esto facilita la inserción ya que no hace falta mover la
-mitad de los elementos como en el ejemplo anterior sino sólo reservar
-memoria para un nuevo nodo y actulizar los punteros de eso nodo y uno o
-dos más.
-
-Entre los contenedores de este tipo se incluyen las listas
-(~std::list~ (double linked) y ~std::forward_list~ (singly-linked)) y
-~std::deque~. Pero también los contenedores /asociativos/ como
-map. Pero también se suele diferenciar entre son los contenedores
-secuenciales (vector, deque, forward_list y list) y los
-asociativos. Además hay vectores asociativos como unordered_map que no
+Además hay vectores asociativos como unordered_map que no
 se basa en nodos. Cuando por ejemplo uno busca por un elemento en un
 ~map~, lo que hace es recorrer una arbol de búsqueda balanceado
 comparando $O(log(n))$ veces, mientras que al buscar en un
@@ -258,5 +392,5 @@ Por último, podemos mencionar además los /container adaptors/ que son
 contenedores que tiene una interfaz típicamente más restrigida, pero
 adecuada a alguna aplicación en particular: ~std::stack~, ~std::queue~
 y ~std::priority_queue~.
-
+ 
 
