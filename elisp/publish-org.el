@@ -1,13 +1,15 @@
 #!/bin/bash
-":"; exec emacs -Q  --script "$0" -f main -- "$@" # -*-emacs-lisp-*-
+":"; exec emacs  --script "$0" -f publish-aprox -- "$@" # -*-emacs-lisp-*-
 
-(require 'ox-publish)
-(setq basedir "~/proyectos/aprox/")
+(package-initialize)
+(custom-set-variables
+ '(package-selected-packages (quote (org htmlize))))
+
 (setq org-publish-project-alist
       '(("aprox"
-        :base-directory "~/proyectos/aprox/org/_posts"
+        :base-directory "./org/_posts"
         :base-extension "org"
-        :publishing-directory "~/proyectos/aprox.github.io/_posts"
+        :publishing-directory "./content/posts"
         :recursive t
         :publishing-function org-html-publish-to-html
         :headline-levels 4     ; Just the default for this project.
@@ -15,7 +17,8 @@
         :body-only t)))
 
 
-(defun main ()
-  (org-publish-project "aprox" t))
+(defun publish-aprox () (interactive)
+       (require 'ox-publish)
+       (org-publish-project "aprox" t))
 
 
