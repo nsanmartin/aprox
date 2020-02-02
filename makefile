@@ -7,8 +7,8 @@ publish-org:
 publish-site:
 	$(HUGO)
 
-serve:
+server:
 	$(HUGO) server --disableFastRender
 
-serve-lan:
+server-lan:
 	$(HUGO) server --bind=192.168.1.12 --baseURL=http://192.168.1.12:1313
