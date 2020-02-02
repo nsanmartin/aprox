@@ -2,6 +2,7 @@
 ---
 layout: post
 title: Contenedores en C++
+date: 2020-01-30
 author: nsm
 email: nsm.aprox@gmail.com
 ---
