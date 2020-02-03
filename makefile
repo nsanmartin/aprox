@@ -5,7 +5,7 @@ publish-org:
 
 
 publish-site:
-	$(HUGO)
+	export HUGO_ENV="production"; $(HUGO) 
 
 server:
 	$(HUGO) server --disableFastRender
