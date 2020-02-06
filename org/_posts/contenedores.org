@@ -391,7 +391,7 @@ guardar más de una clave equivalente.
 
 Por último, podemos mencionar además los /container adaptors/ que son
 contenedores que tiene una interfaz típicamente más restrigida, pero
-adecuada a alguna aplicación en particular: ~std::stack~, ~std::queue~
-y ~std::priority_queue~.
+adecuada a alguna aplicación en particular: [[https://es.cppreference.com/w/cpp/container/stack][~std::stack~]], [[https://es.cppreference.com/w/cpp/container/queue][~std::queue~]]
+y [[https://es.cppreference.com/w/cpp/container/priority_queue][~std::priority_queue~]].
  
 
