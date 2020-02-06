@@ -1,11 +1,13 @@
 HUGO=/home/linuxbrew/.linuxbrew/Cellar/hugo/0.63.2/bin/hugo
 
+
+publish: publish-org
+	export HUGO_ENV="production"; $(HUGO) 
+
+
 publish-org:
 	./elisp/publish-org.el
 
-
-publish-site:
-	export HUGO_ENV="production"; $(HUGO) 
 
 server:
 	$(HUGO) server --disableFastRender

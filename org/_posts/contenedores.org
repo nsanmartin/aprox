@@ -55,7 +55,7 @@ global ni en ~std~. Pero en R también podemos hacer eso:
 mean = Reduce("+",x,0) / length(x)
 #+end_src
 
-Estas dos funciones, ~Reduce~ y ~std::accumulate~ son bastante
+Estas dos funciones, ~Reduce~ y [[https://es.cppreference.com/w/cpp/algorithm/accumulate][~std::accumulate~]] son bastante
 parecidas (hay una función [[https://en.cppreference.com/w/cpp/algorithm/reduce][~std::reduce~]], pero parece no estar
 soportada en todas las implementaciones todavía). La idea es que
 tenemos una colección, una operación binaria y un valor inicial. Esta
@@ -217,7 +217,7 @@ Estamos en la misma.
 Podemos entonces hace algo mejor:
 #+begin_src c++
 template<size_t N>
-bool is_local_extremum(const int (&x)[N], size_t n);
+bool is_local_extremum(const int (&x)[N], size_t position);
 #+end_src
 
 Este template va a generar todas las funciones que sean necesarias
@@ -228,7 +228,7 @@ array en el template y no hacerlo parámetro también? Y así escribe:
 
 #+begin_src c++
 template<typename T,size_t N>
-bool is_local_extremum(const T (&x)[N], size_t n);
+bool is_local_extremum(const T (&x)[N], size_t position);
 #+end_src
 
 Esto sirve para ~int~, pero también para ~short~, ~long~, ~float~,
@@ -237,7 +237,7 @@ formas podría mejorar: podríamos usar [[https://en.cppreference.com/w/cpp/cont
 arreglo común y silvestre. Con esto básicamente accedemos a varias
 "funcionalidades" que están ya provistas en la stl. En particular,
 tenemos el método ~at~ que accede al enésimo elemento pero tirando una
-excepción ~std::out_of_range~ si la posión pedida está fuera del
+excepción [[https://es.cppreference.com/w/cpp/error/out_of_range][~std::out_of_range~]] si la posión pedida está fuera del
 rango. Yo creo que esto está muy bien porque si alguien pide una
 posición fuera del rango algo anda mal y hay que arreglar eso.
 
@@ -280,7 +280,7 @@ no andar copiándolo cada vez que pasamo de una función a otra.
 
 
 Para esto la stl provee una cantidad de distintos contenedores, el
-probablemente mas usado es el ~std::vector~:
+probablemente mas usado es el [[https://es.cppreference.com/w/cpp/container/vector][~std::vector~]]:
 
 #+begin_src c++
 std::vector x(N);
@@ -334,9 +334,9 @@ un contenedor de memoria contigua hay que mover todos los demás, con
 lo que resulta una operación $O(n)$. En cambio, en una lista enlazada
 es $O(1)$ porque es sólo cuestión de crear un nodo y actualizar los
 punteros para insertarlo en la posición que sea. Entre los
-contenedores de este tipo se incluyen ~std::list~ (double linked) y
-~std::forward_list~ (singly-linked), ~std::deque~, ~std::set~ y
-~std::map~.
+contenedores de este tipo se incluyen [[https://es.cppreference.com/w/cpp/container/list][~std::list~]] (double linked) y
+[[https://es.cppreference.com/w/cpp/container/forward_list][~std::forward_list~]] (singly-linked), [[https://es.cppreference.com/w/cpp/container/deque][~std::deque~]], [[https://es.cppreference.com/w/cpp/container/set][~std::set~]] y
+[[https://es.cppreference.com/w/cpp/container/map][~std::map~]].
 
 
 Algunos de estos contenedores son además /asociativos/ como map y
@@ -386,8 +386,8 @@ it->second // valor
 #+end_src
 
 Un ~std::set~ es como un map pero sin valores. También
-existen los contenedores ~std::multiset~ y ~std::multimap~ que permiten
-guardar más de un aclave con el mismo valor.
+existen los contenedores [[https://es.cppreference.com/w/cpp/container/multiset][~std::multiset~]] y [[https://es.cppreference.com/w/cpp/container/multimap][~std::multimap~]] que permiten
+guardar más de una clave equivalente.
 
 Por último, podemos mencionar además los /container adaptors/ que son
 contenedores que tiene una interfaz típicamente más restrigida, pero
