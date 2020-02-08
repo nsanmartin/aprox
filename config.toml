@@ -3,7 +3,5 @@ languageCode = "es-ar"
 title = "Aprox"
 theme = "ananke"
 
-
 [taxonomies]
   tag = "tags"
-  author = "authors"
