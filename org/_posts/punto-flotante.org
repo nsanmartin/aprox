@@ -5,6 +5,7 @@ title: Números de punto flotante
 date: 2019-03-10
 author: nsm
 email: nsm.aprox@gmail.com
+tags: ["aritmética computacional", "punto flotante"]
 ---
 <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 #+end_export

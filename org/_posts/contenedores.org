@@ -5,11 +5,12 @@ title: Contenedores en C++
 date: 2020-01-30
 author: nsm
 email: nsm.aprox@gmail.com
+tags: [ "C++", "contenedores" ]
 ---
 <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 #+end_export
 
-Los contenedores sirven para guardar secuencias de objetos. Si no
+Los contenedores sirven para guardar colecciones de objetos. Si no
 tuvieramos contenedores, tendríamos que recordar el lugar de cada uno
 para cada vez que necesitamos usarlo. En cambio, podemos usar una
 colección y sólo recordar el lugar donde está ella. Esto implica, sin
@@ -390,8 +391,11 @@ existen los contenedores [[https://es.cppreference.com/w/cpp/container/multiset]
 guardar más de una clave equivalente.
 
 Por último, podemos mencionar además los /container adaptors/ que son
-contenedores que tiene una interfaz típicamente más restrigida, pero
-adecuada a alguna aplicación en particular: [[https://es.cppreference.com/w/cpp/container/stack][~std::stack~]], [[https://es.cppreference.com/w/cpp/container/queue][~std::queue~]]
-y [[https://es.cppreference.com/w/cpp/container/priority_queue][~std::priority_queue~]].
+comor contenedores, tiene una interfaz típicamente más restrigida,
+aunque pero adecuada a alguna aplicación en particular: [[https://es.cppreference.com/w/cpp/container/stack][~std::stack~]],
+[[https://es.cppreference.com/w/cpp/container/queue][~std::queue~]] y [[https://es.cppreference.com/w/cpp/container/priority_queue][~std::priority_queue~]]. Sin embargo, estos últimos no
+pueden iterarse como el resto de los contenedores, no tienen ~begin~ y
+~end~. Se implementan con algún contenedor de los mencionados antes,
+pero exponiend una interfaz distinta.
  
 

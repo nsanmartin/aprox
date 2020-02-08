@@ -4,11 +4,12 @@ title: Contenedores en C++
 date: 2020-01-30
 author: nsm
 email: nsm.aprox@gmail.com
+tags: [ "C++", "contenedores" ]
 ---
 <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
 <p>
-Los contenedores sirven para guardar secuencias de objetos. Si no
+Los contenedores sirven para guardar colecciones de objetos. Si no
 tuvieramos contenedores, tendríamos que recordar el lugar de cada uno
 para cada vez que necesitamos usarlo. En cambio, podemos usar una
 colección y sólo recordar el lugar donde está ella. Esto implica, sin
@@ -490,7 +491,10 @@ guardar más de una clave equivalente.
 
 <p>
 Por último, podemos mencionar además los <i>container adaptors</i> que son
-contenedores que tiene una interfaz típicamente más restrigida, pero
-adecuada a alguna aplicación en particular: <a href="https://es.cppreference.com/w/cpp/container/stack"><code>std::stack</code></a>, <a href="https://es.cppreference.com/w/cpp/container/queue"><code>std::queue</code></a>
-y <a href="https://es.cppreference.com/w/cpp/container/priority_queue"><code>std::priority_queue</code></a>.
+comor contenedores, tiene una interfaz típicamente más restrigida,
+aunque pero adecuada a alguna aplicación en particular: <a href="https://es.cppreference.com/w/cpp/container/stack"><code>std::stack</code></a>,
+<a href="https://es.cppreference.com/w/cpp/container/queue"><code>std::queue</code></a> y <a href="https://es.cppreference.com/w/cpp/container/priority_queue"><code>std::priority_queue</code></a>. Sin embargo, estos últimos no
+pueden iterarse como el resto de los contenedores, no tienen <code>begin</code> y
+<code>end</code>. Se implementan con algún contenedor de los mencionados antes,
+pero exponiend una interfaz distinta.
 </p>

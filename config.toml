@@ -2,3 +2,8 @@ baseURL = "http://aprox.github.io/"
 languageCode = "es-ar"
 title = "Aprox"
 theme = "ananke"
+
+
+[taxonomies]
+  tag = "tags"
+  author = "authors"
