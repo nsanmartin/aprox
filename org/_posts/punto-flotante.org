@@ -3,7 +3,7 @@
 layout: post
 title: Números de punto flotante
 date: 2019-03-10
-author: nsm
+author: Nicolás San Martín
 email: nsm.aprox@gmail.com
 tags: ["aritmética computacional", "punto flotante"]
 ---

@@ -3,5 +3,7 @@ languageCode = "es-ar"
 title = "Aprox"
 theme = "ananke"
 
+DefaultContentLanguage = "es"
+
 [taxonomies]
   tag = "tags"

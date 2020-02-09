@@ -3,7 +3,7 @@
 layout: post
 title: Espacio muestral y de probabilidad
 date: 2019-03-17
-author: nsm
+author: Nicolás San Martín
 email: nsm.aprox@gmail.com
 tags: ["probabilidad"]
 ---

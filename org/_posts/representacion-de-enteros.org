@@ -3,7 +3,7 @@
 layout: post
 title: Representación de números enteros
 date: 2019-03-03
-author: nsm
+author: Nicolás San Martín
 email: nsm.aprox@gmail.com
 tags: ["aritmética computacional", "números enteros"]
 ---
