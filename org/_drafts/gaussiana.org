@@ -1,0 +1,61 @@
+La distribución gaussiana es muy usada para modelar variables
+contínuas. Además, el /teorema central del límite/ prueba que, si
+\(\{X_i\}_{1\leq i \leq n}\) es una sucesión de variables aleatorias
+*independientes*, con *idéntica distribución* y *varianza finita*
+entonces su suma, es decir \(\sum_{i=1}^n X_i\) es una variable
+aleatoria que /converge en distribución/ a una distribución
+normal. Que converja en distribución quiere decir informalmente que su
+distribución se /aproxima/ a una distribución normal. Más
+formalemente, una sucesión \(\{X_i\}_{1\leq i \leq n}\) *converge en
+distribución* a \(X\) si 
+\(
+\lim_{n\to\infty}F_{X_n}(x) = F_X(x)
+\), donde \(F_{X_n}\) y \(F_n\) son las funciones de distribución de las
+variables aleatorias \(X_n\) y \(X\). O sea:
+
+\[
+\lim_{n\to\infty}p({X_n} < x) = p(X < x)
+\]
+  
+No es la idea de este post en realidad desarrollar este tema, pero
+veamos no obstante algunos gráficos para ilustrar esto. Sea X variable
+con distribución uniforme, o sea \(X \sim \mathcal{U}(a,b)\). Sea,
+para cada \(i\), \(X_i \sim \mathcal{U}(0,1)\) y sea 
+\(Y_n = \frac{1}{n}\sum_{i=1}^n X_i \). Tomamos una muestra de \(Y_1\)
+y obtenemos el siguiente histograma:
+
+[[./img/n_eq_1.png]]
+
+
+Con \(Y_2\):
+
+[[./img/n_eq_2.png]]
+
+
+Para \(Y_3\):
+
+[[./img/n_eq_3.png]]
+
+
+\(Y_30\)
+
+[[./img/n_eq_30.png]]
+
+Veamos ahora su función de densidad. Para el caso univariado es:
+
+\[
+\mathcal{N}(x | \mu, \sigma^2) =  \frac{1}{(2 \pi\sigma^2)^{1/2}}
+ \exp{\bigg(-\frac{1}{2\sigma^2}(x - \mu)^2\bigg)}
+\]
+
+
+Y el multivariado, con \(\mathbf{x} \in \mathbb{R}^D\):
+\[
+\mathcal{N}(\mathbf{x} | \boldsymbol{\mu}, \mathbf{\Sigma}) 
+=  \frac{1}{(2 \pi)^{D/2} |{\mathbf{\Sigma}|^{1/2}}}
+ \exp{
+\bigg(-\frac{1}{2} (\mathbf{x} - \boldsymbol{\mu})^T
+\mathbf{\Sigma}^{-1} (\mathbf{x} - \boldsymbol{\mu})
+\bigg)}
+\]
+

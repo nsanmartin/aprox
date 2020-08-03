@@ -1,0 +1,156 @@
+#+options: toc:nil
+
+# Muchas veces puede asumirse que existe una relación entre un conjunto
+# de observaciones y un resultado. Por ejemplo, al hervir el agua de la
+# pava en la hornalla, podemos creer que existe una relación entre el
+# tiempo que tenemos que esperar hasta que empiecen a subir las burbujas
+# y cuanto giramos la perilla del gas. Por ejemplo, si pongo el gas en
+# un determinado punto, etiquetado como /mínimo/ en la horanalla, tengo
+# que esperar 9 minutos, con la pava llena de agua. Sin duda podemos
+# esperar que aumentar un poco el flujo de gas va disminuir el
+# tiempo. Pero también podemos querer conocer más acerca de esta
+# relación.
+
+# Por ejemplo, si la relación fuera lineal ...
+# ###
+
+# Muchas veces puede asumirse que existe una relación entre una
+# observación, o un conjunto de observaciones, y un resultado. Por
+# ejemplo, el comando ping de linux reporta el /round trip time/, es
+# decir el tiempo entre que sale el mensaje hasta que se recibe la
+# respuesta al mismo. Ese tiempo varía a lo largo del día, y esto puede
+# llevarnos a preguntar sobre la relación entre la hora del día, y el
+# tiempo reportado.
+
+# Sin duda este valor depende de muchas cosas, como el medio físico de
+# transmisión en cada una de las subredes que transmiten el mensaje, la
+# cantidad de routers por los que el mismo pase, la distancia física
+# entre el cliente y el servidor, el servicio del proveedor de internet,
+# etc. Tambien tendrá que ver con la cantidad de usuarios, ya que un un
+# aumento en el uso puede llevar a que se pierda un mayor nµmero de
+# paquetes por diversos motivos. Y así podemos llegar a conjeturar que
+# como según la hora la cantidad de personas conectadas a internet
+# cambia, también puede llegar a cambiar el /round trip time/ (o
+# rtt). Otra forma d ellegar a esa conjetura puede ser que se asocie a
+# determinados momentos del día una cantidad mayor de interrupciones en
+# el /streaming/.
+
+
+# Como sea, si conjeturamos una relación así, parece buena idea tratar
+# de modelarla con una función que a cada momento del día le asigne un
+# rtt. Claro que así estamos presuponiendo que todos los días la
+# relación es la misma.
+
+
+Sean \(\mathbf{x_n} \in \mathbb{R}^D\) y \(t_n \in \mathbb{R}\).
+
+Dados \(\{\mathbf{x_n}\}_{1\leq n \leq N}\) y \(\{t_n\}_{1\leq n \leq
+N}\), queremos un modelo para predecir \(t\) dado \(\mathbf{x}\). Lo
+más directo es usar una función \(y(\mathbf{x})\) que exprese la
+predicción. O si no, podemos (perspectiva probabilística), querer las
+funciones de densidad \( p(t|\mathbf{x}) \) para cada
+\(\mathbf{x}\). En este caso, la predicción será \[ \arg\max_{t} \{
+p(t|\mathbf{x}) \} \].
+
+* Modelo lineal
+
+Un modelo lineal es uno donde \(y(\mathbf{x})\) sea un función lineal, o sea:
+
+\[
+y(\mathbf{x}) = \mathbf{w}^T \mathbf{x}
+\]
+
+Dado este modelo, entonces, tenemos que encontrar el \(\mathbf{w}\)
+para las predicciones sean mejores. Pero, como el método que usamos
+optimiza con respecto a \(\mathbf{w}\), podemos aplicar a
+\(\mathbf{x}\) alguna función cualquiera y optimizar la compbinación
+lineal del vector resultante, que llamamos \(\phi (\mathbf{x})\)
+(basis function).
+
+Es decir que \(\phi : \mathbb{R}^D \to \mathbb{R}^M\) y entonces el
+modelo es:
+
+
+\[
+y(\mathbf{x}) = \mathbf{w}^T \phi(\mathbf{x})
+\]
+
+
+Así, el modelo no es necesariamente lineal con respecto a
+\(\mathbf{x}\), pero sí lo es con respecto a \(\phi \mathbf{x}\).
+
+
+** Ejemplos
+
+id: \(\phi(x) = x\)
+
+polinomio: \(\phi(x) = (1, x, x^2, \dots, x^G)^T\) 
+
+gaussianas: \( \phi(x)_j = \exp{\big(\frac{(x-\mu_j)^2}{2s^2}}\big) \)
+
+sigmoidea : 
+
+* Entrenamiento
+
+El ajusto de este modelo, por medio del cual obtenemos el vector
+\(\mathbf{w}\) se llama /entrenamiento/. Para entrenar este modelo
+usamos el método de /cuadrados mínimos lineales/. Existen distintas
+formas de justificar esto.
+
+** Minimizar el error cuadrático 
+
+Como queremos que \(y(\mathbf{x}])\) se acerque a \(t\) entonces
+usamos una función, la /función de pérdida/ para que nos diga que tal
+es.
+
+\[
+ E(w) = \frac{1}{2} (\mathbf{y} - \mathbf{t})^T (\mathbf{y} - \mathbf{t})
+\]
+
+
+Donde \(\mathbf{y} \in \mathbb{R}^N\) es el vector con los
+\(y(\mathbf{x_n}\) y \(\mathbf{t} \in \mathbb{R}^N\) con los \(t_n\),
+o sea:
+
+\[
+ E(w) = \frac{1}{2} (\Phi \mathbf{w} - \mathbf{t})^T
+ (\Phi \mathbf{w}- \mathbf{t})
+\]
+
+
+Donde \(\Phi\) es la matriz cuya file iésima es \(\phi(\mathbf{x})\).
+
+Esta función \(E(X)\) es cóncava y tiene un mínimo absoluto. Podemos
+derivar e igualar a cero y así encontrar el \(\mathbf{w}\) para el
+cual alcanza ese mínimo.
+
+
+\[
+\nabla E(w) = \frac{1}{2} 2 (\Phi \mathbf{w} - \mathbf{t})^T \Phi 
+= (\Phi \mathbf{w} - \mathbf{t})^T \Phi
+= ((\Phi \mathbf{w})^T - \mathbf{t}^T) \Phi
+= (\Phi \mathbf{w})^T\Phi - \mathbf{t}^T\Phi
+\]
+
+Igualamos a cero y
+
+\[
+(\Phi \mathbf{w})^T\Phi = \mathbf{t}^T\Phi \Leftrightarrow
+\mathbf{w}^T\Phi^T\Phi = \mathbf{t}^T\Phi \Leftrightarrow
+\Phi^T\Phi\mathbf{w} = \Phi^T \mathbf{t}
+\]
+
+Esta ecuación \(\Phi^T\Phi\mathbf{w} = \Phi^T \mathbf{t}\) es una de
+las /ecuaciones normales/ y entonces el vector buscado, si
+\(\Phi^T\Phi\) es inversible, es:
+
+\[
+\mathbf{\hat{w}} = (\Phi^T\Phi)^{-1} \Phi^T \mathbf{t}
+\]
+
+
+** Enfoque geométrico
+
+** Máxima verosimilitud
+
+** Enfoque bayesiano

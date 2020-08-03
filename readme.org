@@ -1,0 +1,30 @@
+#+startup:nofold
+* Escribir un post
+Para escribir un post, hacerlo en ./org/_posts. Su nombre debe emezar
+con una fecha. Todos los posts deben tener por encabezado:
+
+#+begin_export html
+---
+layout: post
+title: <título del post>
+---
+<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+#+end_export
+
+El elemento con el tag script es para qeu se vean las fórmulas de latex.
+
+* Editar layout 
+Por ejemplo, para agregar en cada post el email del autor, en
+~themes/ananke/layouts/_default/single.html~:
+#+begin_src html
+{{ with .Params.email }}
+    <strong>
+    {{ if reflect.IsSlice . }}
+        {{ delimit . ", " | markdownify }}
+    {{else}}
+        {{ . | markdownify }}
+    {{ end }}
+    </strong>
+{{ end }}
+#+end_src
+
