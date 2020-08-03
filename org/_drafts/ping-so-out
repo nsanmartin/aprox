@@ -1,0 +1,66 @@
+dom 02 ago 2020 22:38:47 -03
+PING stackoverflow.com (151.101.193.69) 56(84) bytes of data.
+
+--- stackoverflow.com ping statistics ---
+128 packets transmitted, 128 received, 0% packet loss, time 127199ms
+rtt min/avg/max/mdev = 21.690/26.492/73.410/7.361 ms
+dom 02 ago 2020 22:50:54 -03
+PING stackoverflow.com (151.101.193.69) 56(84) bytes of data.
+
+--- stackoverflow.com ping statistics ---
+128 packets transmitted, 128 received, 0% packet loss, time 127176ms
+rtt min/avg/max/mdev = 21.570/31.662/211.609/23.664 ms
+dom 02 ago 2020 23:03:02 -03
+PING stackoverflow.com (151.101.129.69) 56(84) bytes of data.
+
+--- stackoverflow.com ping statistics ---
+128 packets transmitted, 128 received, 0% packet loss, time 127215ms
+rtt min/avg/max/mdev = 21.217/29.844/80.974/12.723 ms
+dom 02 ago 2020 23:15:09 -03
+PING stackoverflow.com (151.101.193.69) 56(84) bytes of data.
+
+--- stackoverflow.com ping statistics ---
+128 packets transmitted, 128 received, 0% packet loss, time 127205ms
+rtt min/avg/max/mdev = 21.422/25.558/70.254/5.249 ms
+dom 02 ago 2020 23:27:16 -03
+PING stackoverflow.com (151.101.129.69) 56(84) bytes of data.
+
+--- stackoverflow.com ping statistics ---
+128 packets transmitted, 128 received, 0% packet loss, time 127210ms
+rtt min/avg/max/mdev = 22.036/27.833/192.560/15.955 ms
+dom 02 ago 2020 23:39:23 -03
+PING stackoverflow.com (151.101.193.69) 56(84) bytes of data.
+
+--- stackoverflow.com ping statistics ---
+128 packets transmitted, 128 received, 0% packet loss, time 127157ms
+rtt min/avg/max/mdev = 22.490/25.455/44.253/2.357 ms
+dom 02 ago 2020 23:51:31 -03
+PING stackoverflow.com (151.101.193.69) 56(84) bytes of data.
+
+--- stackoverflow.com ping statistics ---
+128 packets transmitted, 128 received, 0% packet loss, time 127217ms
+rtt min/avg/max/mdev = 23.146/25.834/34.614/1.886 ms
+lun 03 ago 2020 00:03:38 -03
+PING stackoverflow.com (151.101.129.69) 56(84) bytes of data.
+
+--- stackoverflow.com ping statistics ---
+128 packets transmitted, 128 received, 0% packet loss, time 127197ms
+rtt min/avg/max/mdev = 21.287/24.300/69.534/4.412 ms
+lun 03 ago 2020 00:15:45 -03
+PING stackoverflow.com (151.101.193.69) 56(84) bytes of data.
+
+--- stackoverflow.com ping statistics ---
+128 packets transmitted, 128 received, 0% packet loss, time 127204ms
+rtt min/avg/max/mdev = 23.250/25.255/31.274/1.261 ms
+lun 03 ago 2020 09:42:33 -03
+PING stackoverflow.com (151.101.193.69) 56(84) bytes of data.
+
+--- stackoverflow.com ping statistics ---
+128 packets transmitted, 119 received, +9 errors, 7,03125% packet loss, time 127351ms
+rtt min/avg/max/mdev = 22.782/39.641/1054.658/103.828 ms, pipe 4
+lun 03 ago 2020 09:54:41 -03
+PING stackoverflow.com (151.101.129.69) 56(84) bytes of data.
+
+--- stackoverflow.com ping statistics ---
+128 packets transmitted, 128 received, 0% packet loss, time 127188ms
+rtt min/avg/max/mdev = 21.281/26.919/175.583/16.776 ms
